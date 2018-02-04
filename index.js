@@ -87,7 +87,14 @@ let persons =  [
 
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    person = persons.filter(person => person.id !== id)
+
+    Person
+    .findById(id)
+    .remove()
+    .exec()
+    .catch(error => {
+      console.log(error)
+    })
 
     response.status(204).end()
   })
@@ -116,14 +123,9 @@ let persons =  [
       return response.status(400).json({error: 'phone missing'})
     }
 
-    if ((persons.filter(person => person.name === body.name)).length > 0) {
-      return response.status(400).json({error: 'name must be unique'})
-    }
-
     const person = new Person({
       name: body.name,
-      phone: body.phone,
-      id: generateId()
+      phone: body.phone
     })
   
     person
