@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons =  [
       {
@@ -53,6 +56,42 @@ let persons =  [
     person = persons.filter(person => person.id !== id)
   
     response.status(204).end()
+  })
+
+  const generateId = () => {
+    const newId = Math.floor(Math.random() * Math.floor(100000))
+    // tarkistetaan onko id jo olemassa, jos on generoidaan id uudelleen
+    // rekursiivisesti
+    const isSaved = persons.filter(person => person.id === newId)    
+    if (isSaved.length > 0) {
+      generateId() 
+    }
+    return newId
+  }
+  
+  app.post('/api/persons', (request, response) => {
+    const body = request.body
+
+    if (body.name === undefined) {
+      return response.status(400).json({error: 'name missing'})
+    }
+    if (body.phone === undefined) {
+      return response.status(400).json({error: 'phone missing'})
+    }
+
+    if ((persons.filter(person => person.name === body.name)).length > 0) {
+      return response.status(400).json({error: 'name must be unique'})
+    }
+
+    const person = {
+      name: body.name,
+      phone: body.phone,
+      id: generateId()
+    }
+  
+    persons = persons.concat(person)
+  
+    response.json(person)
   })
 
   const PORT = 3001
