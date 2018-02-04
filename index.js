@@ -1,8 +1,27 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const morgan = require('morgan')
+//const morganBody = require('morgan-body')
 
 app.use(bodyParser.json())
+
+// Morgan usage way 1
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['body'](req,res),
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+}))
+
+// Morgan usage way 2: Another way instead of "morgan" to simply use nicer "morgan-body"
+//morganBody(app)
 
 let persons =  [
       {
@@ -69,6 +88,8 @@ let persons =  [
     return newId
   }
   
+  morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+
   app.post('/api/persons', (request, response) => {
     const body = request.body
 

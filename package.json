@@ -15,7 +15,9 @@
   "author": "Taru Kojo",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "morgan": "^1.9.0",
+    "morgan-body": "^2.0.2"
   },
   "devDependencies": {
     "nodemon": "^1.14.12"
