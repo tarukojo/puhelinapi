@@ -1,0 +1,37 @@
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name": "Tiina Testaaja",
+    "phone": "050-33333333"
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Sauli Niinistö",
+    "phone": "033-22222222"
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Julia Janakainen",
+    "phone": "033-22222322"
+}
+
+###
+
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "Ihan uusi",
+    "phone": "045-3353636"
+}
