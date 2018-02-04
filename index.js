@@ -5,6 +5,8 @@ const morgan = require('morgan')
 const cors = require('cors')
 //const morganBody = require('morgan-body')
 
+const Person = require('./models/person')
+
 app.use(express.static('build'))
 
 app.use(cors())
@@ -57,7 +59,11 @@ let persons =  [
   })
   
   app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person
+    .find({})
+    .then(persons => {
+      res.json(persons.map(formatPerson))
+    })
   })
 
   app.get('/info', (req,res) => {
@@ -66,33 +72,38 @@ let persons =  [
   
   app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-  
-    if ( person ) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
+    
+    Person
+    .findById(id)
+    .then(person => {
+      response.json(formatPerson(person))
+    })
+    .catch(error => {
+      console.log(error)
+    })
+    response.status(404).end()
+
   })
 
   app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
     person = persons.filter(person => person.id !== id)
-  
+
     response.status(204).end()
   })
 
   const generateId = () => {
-    const newId = Math.floor(Math.random() * Math.floor(100000))
-    // tarkistetaan onko id jo olemassa, jos on generoidaan id uudelleen
-    // rekursiivisesti
-    const isSaved = persons.filter(person => person.id === newId)    
-    if (isSaved.length > 0) {
-      generateId() 
-    }
-    return newId
+    return Math.floor(Math.random() * Math.floor(100000))
   }
   
+  const formatPerson = (person) => {
+    return {
+      name: person.name,
+      phone: person.phone,
+      id: person._id
+    }
+  }
+
   morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
 
   app.post('/api/persons', (request, response) => {
@@ -109,15 +120,20 @@ let persons =  [
       return response.status(400).json({error: 'name must be unique'})
     }
 
-    const person = {
+    const person = new Person({
       name: body.name,
       phone: body.phone,
       id: generateId()
-    }
+    })
   
-    persons = persons.concat(person)
-  
-    response.json(person)
+    person
+      .save()
+      .then(savedPerson => {
+        response.json(formatPerson(savedPerson))
+      })
+      .catch(error => {
+        console.log(error)
+      })
   })
 
   const PORT = process.env.PORT || 3001
