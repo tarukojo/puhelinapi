@@ -1,0 +1,23 @@
+{
+  "name": "puhelinapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "watch": "node_modules/.bin/nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "puhelinapi"
+  },
+  "author": "Taru Kojo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}
