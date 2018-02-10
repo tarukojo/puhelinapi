@@ -1,9 +1,9 @@
-PUT http://localhost:3001/api/persons/5a7708053ce1900d741b2c7c
+PUT http://localhost:3001/api/persons/5a7e5feecc34ca22d0335ed9
 Content-Type: application/json
 
 {
-    "name": "Olli Osaaja",
-    "phone": "033-22222322"
+    "name": "Liisa Laatikko",
+    "phone": "034-44442"
 }
 
 ###
