@@ -67,21 +67,29 @@ let persons =  [
   })
 
   app.get('/info', (req,res) => {
-    res.send('<div>puhelinluettelossa '+ persons.length + ' henkilön tiedot</div><p/><div>'+ new Date() +'</div>')
+    Person
+    .find({})
+    .then(persons => {
+      res.send('<div>puhelinluettelossa '+ persons.length + ' henkilön tiedot</div><p/><div>'+ new Date() +'</div>')
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(404).end()
+    })
   })
   
   app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
     
     Person
-    .findById(id)
+    .findOne({_id: id})
     .then(person => {
       response.json(formatPerson(person))
     })
     .catch(error => {
       console.log(error)
+      response.status(404).end()
     })
-    response.status(404).end()
 
   })
 
