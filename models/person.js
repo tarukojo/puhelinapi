@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 require('dotenv').config()
 
-const url = ""
+let url = ""
 
 if ( process.env.NODE_ENV !== 'production' ) {
   url = process.env.MONGODB_URI
