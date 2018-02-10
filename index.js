@@ -135,15 +135,17 @@ let persons =  [
       name: body.name,
       phone: body.phone,
     })
+
+    Person
+    .findOneAndUpdate({name: body.name}, {name: body.name, phone: body.phone}, {upsert:true, new: true} )
+    .then(updatedPerson => {
+      response.json(formatPerson(updatedPerson))
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
   
-    person
-      .save()
-      .then(savedPerson => {
-        response.json(formatPerson(savedPerson))
-      })
-      .catch(error => {
-        console.log(error)
-      })
   })
 
   app.put('/api/persons/:id', (request, response) => {
