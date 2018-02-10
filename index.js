@@ -86,17 +86,17 @@ let persons =  [
   })
 
   app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
 
     Person
-    .findById(id)
-    .remove()
-    .exec()
+    .findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
     .catch(error => {
       console.log(error)
+      response.status(404).end()
     })
 
-    response.status(204).end()
   })
 
   const generateId = () => {
@@ -125,7 +125,7 @@ let persons =  [
 
     const person = new Person({
       name: body.name,
-      phone: body.phone
+      phone: body.phone,
     })
   
     person
@@ -137,6 +137,20 @@ let persons =  [
         console.log(error)
       })
   })
+
+  app.put('/api/persons/:id', (request, response) => {
+    const reqid = Number(request.params.id)
+
+    Person
+    .findOneAndUpdate({id: reqid})
+    .update(person)
+    .catch(error => {
+      console.log(error)
+    })
+
+    response.status(204).end()
+  })
+
 
   const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
