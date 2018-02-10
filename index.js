@@ -71,7 +71,7 @@ let persons =  [
   })
   
   app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
+    const id = request.params.id
     
     Person
     .findById(id)
@@ -139,16 +139,21 @@ let persons =  [
   })
 
   app.put('/api/persons/:id', (request, response) => {
-    const reqid = Number(request.params.id)
+    
+    console.log("ID: ", request.params.id)
+
+    const body = request.body
 
     Person
-    .findOneAndUpdate({id: reqid})
-    .update(person)
+    .findOneAndUpdate({_id: request.params.id}, {phone: body.phone}, {upsert:false, new: true} )
+    .then(updatedPerson => {
+      response.json(formatPerson(updatedPerson))
+    })
     .catch(error => {
       console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
     })
 
-    response.status(204).end()
   })
 
 
